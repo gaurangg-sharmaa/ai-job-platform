@@ -146,4 +146,11 @@ public class AIResumeAnalysisController {
                                 "AI analysis not found for this resume and job"
                         ));
     }
+
+    @GetMapping("/resume/{resumeId}")
+    public java.util.List<AIJobAnalysis> getAllAnalysesForResume(
+            @PathVariable Long resumeId) {
+
+        return aiJobAnalysisRepository.findByResumeId(resumeId);
+    }
 }
