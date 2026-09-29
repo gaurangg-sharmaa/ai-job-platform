@@ -10,10 +10,12 @@ import AI.Job.Application.Platform.repository.JobRepository;
 import AI.Job.Application.Platform.repository.ResumeRepository;
 import AI.Job.Application.Platform.service.AIResumeAnalysisService;
 import org.springframework.web.bind.annotation.*;
+import AI.Job.Application.Platform.dto.AIJobAnalysisSummaryResponse;
+import AI.Job.Application.Platform.entity.AIJobAnalysis;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
 
 
 @RestController
@@ -150,10 +152,55 @@ public class AIResumeAnalysisController {
                         ));
     }
 
+//    @GetMapping("/resume/{resumeId}")
+//    public java.util.List<AIJobAnalysis> getAllAnalysesForResume(
+//            @PathVariable Long resumeId) {
+//
+//        return aiJobAnalysisRepository.findByResumeId(resumeId);
+//    }
+
+
     @GetMapping("/resume/{resumeId}")
-    public java.util.List<AIJobAnalysis> getAllAnalysesForResume(
+    public List<AIJobAnalysisSummaryResponse> getAllAnalysesForResume(
             @PathVariable Long resumeId) {
 
-        return aiJobAnalysisRepository.findByResumeId(resumeId);
+        // Verify that the resume exists
+        resumeRepository.findById(resumeId)
+                .orElseThrow(() ->
+                        new RuntimeException("Resume not found"));
+
+        // Retrieve all saved analyses for this resume
+        List<AIJobAnalysis> analyses =
+                aiJobAnalysisRepository.findByResumeId(resumeId);
+
+        // Convert entities into response DTOs
+        return analyses.stream()
+                .map(analysis -> {
+                    AIJobAnalysisSummaryResponse response =
+                            new AIJobAnalysisSummaryResponse();
+
+                    response.setId(analysis.getId());
+                    response.setResumeId(
+                            analysis.getResume().getId());
+                    response.setJobId(
+                            analysis.getJob().getId());
+                    response.setJobTitle(
+                            analysis.getJob().getTitle());
+                    response.setCompanyName(
+                            analysis.getJob().getCompanyName());
+                    response.setMatchScore(
+                            analysis.getMatchScore());
+                    response.setMatchedSkills(
+                            analysis.getMatchedSkills());
+                    response.setMissingSkills(
+                            analysis.getMissingSkills());
+                    response.setRecommendation(
+                            analysis.getRecommendation());
+                    response.setAnalyzedAt(
+                            analysis.getAnalyzedAt());
+
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
 }
