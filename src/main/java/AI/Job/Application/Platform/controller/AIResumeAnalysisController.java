@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/ai-analysis")
 public class AIResumeAnalysisController {
 
+
     private final AIResumeAnalysisService aiResumeAnalysisService;
     private final ResumeRepository resumeRepository;
     private final JobRepository jobRepository;
