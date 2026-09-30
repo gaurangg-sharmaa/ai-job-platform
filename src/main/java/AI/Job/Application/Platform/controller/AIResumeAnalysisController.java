@@ -28,6 +28,8 @@ public class AIResumeAnalysisController {
     private final JobRepository jobRepository;
     private final AIJobAnalysisRepository aiJobAnalysisRepository;
 
+
+
     public AIResumeAnalysisController(
             AIResumeAnalysisService aiResumeAnalysisService,
             ResumeRepository resumeRepository,
