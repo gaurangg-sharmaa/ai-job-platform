@@ -1,8 +1,10 @@
+
 package AI.Job.Application.Platform.service;
 
 import AI.Job.Application.Platform.dto.UserRequest;
 import AI.Job.Application.Platform.entity.User;
 import AI.Job.Application.Platform.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +13,14 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User register(UserRequest request) {
@@ -26,10 +33,14 @@ public class UserService {
 
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+
+        // Store a BCrypt hash instead of the original password.
+        user.setPassword(
+                passwordEncoder.encode(request.getPassword())
+        );
+
         user.setPhone(request.getPhone());
         user.setLocation(request.getLocation());
-
         user.setRole("USER");
 
         return userRepository.save(user);
@@ -43,8 +54,9 @@ public class UserService {
 
         return userRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found with id: " + id));
+                        new RuntimeException(
+                                "User not found with id: " + id
+                        )
+                );
     }
-
-
 }

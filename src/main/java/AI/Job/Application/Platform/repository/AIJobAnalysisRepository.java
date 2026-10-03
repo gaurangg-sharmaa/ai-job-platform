@@ -16,4 +16,5 @@ public interface AIJobAnalysisRepository extends JpaRepository<AIJobAnalysis, Lo
     List<AIJobAnalysis> findByResumeId(Long resumeId);
 
     List<AIJobAnalysis> findByJobId(Long jobId);
+
 }
