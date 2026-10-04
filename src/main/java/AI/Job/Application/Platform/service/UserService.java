@@ -15,10 +15,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder) {
-
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -42,6 +39,8 @@ public class UserService {
         user.setPhone(request.getPhone());
         user.setLocation(request.getLocation());
         user.setRole("USER");
+
+        //user.setRole("CANDIDATE");
 
         return userRepository.save(user);
     }
