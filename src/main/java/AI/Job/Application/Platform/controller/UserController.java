@@ -5,7 +5,12 @@ import AI.Job.Application.Platform.entity.User;
 import AI.Job.Application.Platform.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import AI.Job.Application.Platform.dto.LoginRequest;
+import AI.Job.Application.Platform.dto.LoginResponse;
+import jakarta.validation.Valid;
+
 
 import java.util.List;
 
@@ -36,6 +41,15 @@ public class UserController {
     public User getUser(@PathVariable Long id) {
 
         return userService.getUserById(id);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+
+        return ResponseEntity.ok(
+                userService.login(request)
+        );
     }
 
 }
